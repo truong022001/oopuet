@@ -2,10 +2,12 @@ package uet.oop.bomberman;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
@@ -14,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
-
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
 
@@ -29,36 +30,45 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
+        Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
+        entities.add(bomberman);
+
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
 
+        bomberman.setRightBomberAT(bomberman.createAnimationTimer("right", gc));
+        bomberman.setLeftBomberAT(bomberman.createAnimationTimer("left", gc));
+        bomberman.setUpBomberAT(bomberman.createAnimationTimer("up", gc));
+        bomberman.setDownBomerAT(bomberman.createAnimationTimer("down", gc));
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
 
         // Tao scene
         Scene scene = new Scene(root);
-
-        // Them scene vao stage
+        scene.setOnKeyPressed(
+                new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent event) {
+                        bomberman.keyPressed(event);
+                    }
+                }
+        );
+        scene.setOnKeyReleased(
+                new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent event) {
+                        bomberman.keyReleased(event);
+                    }
+                }
+        );
         stage.setScene(scene);
         stage.show();
-
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                render();
-                update();
-            }
-        };
-        timer.start();
-
         createMap();
-
-        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
     }
 
+    //Can viet lai de nhan du lieu tu file txt
     public void createMap() {
         String FullMap = "###############################\n" +
                 "#p     ** *  1 * 2 *  * * *   #\n" +
@@ -89,6 +99,7 @@ public class BombermanGame extends Application {
                             break;
                         case '1':
                             object = new Balloon(i, j, Sprite.balloom_left1.getFxImage());
+                            entities.add(object);
                             break;
                         case '2':
                             object = new Oneal(i, j, Sprite.oneal_left1.getFxImage());
@@ -102,6 +113,9 @@ public class BombermanGame extends Application {
                         case 's':
                             object = new SpeedItem(i, j, Sprite.powerup_speed.getFxImage());
                             break;
+                        case '#':
+                            object = new Wall(i, j, Sprite.wall.getFxImage());
+                            break;
                         default:
                             object = new Grass(i, j, Sprite.grass.getFxImage());
                     }
@@ -109,6 +123,7 @@ public class BombermanGame extends Application {
                 stillObjects.add(object);
             }
         }
+        render();
     }
 
     public void update() {
