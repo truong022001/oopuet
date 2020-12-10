@@ -41,5 +41,6 @@ public abstract class Entity {
         Image base = iv.snapshot(params, null);
         gc.drawImage(base, x * Sprite.SCALED_SIZE, y * Sprite.SCALED_SIZE);
     }
+
     public abstract void update();
 }

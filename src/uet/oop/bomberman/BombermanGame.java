@@ -1,6 +1,5 @@
 package uet.oop.bomberman;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -11,16 +10,19 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
-    public static final int WIDTH = 31;
-    public static final int HEIGHT = 13;
+    private static int WIDTH = 31;
+    private static int HEIGHT = 13;
+    private String fullMap;
+    private int level;
 
-    private GraphicsContext gc;
-    private Canvas canvas;
+    private GraphicsContext gcMap;
+    private Canvas canvasMap;
+    public static GraphicsContext gcCharacter;
+    public static Canvas canvasCharacter;
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
 
@@ -30,23 +32,25 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
+        stage.setTitle("Bomberman Game");
+        Group root = new Group();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        canvasMap = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        root.getChildren().add(canvasMap);
+        gcMap = canvasMap.getGraphicsContext2D();
+
+        canvasCharacter = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        root.getChildren().add(canvasCharacter);
+        gcCharacter = canvasCharacter.getGraphicsContext2D();
+
         Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
         entities.add(bomberman);
+        bomberman.setRightBomberAT(bomberman.createAnimationTimer("right", gcCharacter));
+        bomberman.setLeftBomberAT(bomberman.createAnimationTimer("left", gcCharacter));
+        bomberman.setUpBomberAT(bomberman.createAnimationTimer("up", gcCharacter));
+        bomberman.setDownBomerAT(bomberman.createAnimationTimer("down", gcCharacter));
 
-        // Tao Canvas
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        gc = canvas.getGraphicsContext2D();
-
-        bomberman.setRightBomberAT(bomberman.createAnimationTimer("right", gc));
-        bomberman.setLeftBomberAT(bomberman.createAnimationTimer("left", gc));
-        bomberman.setUpBomberAT(bomberman.createAnimationTimer("up", gc));
-        bomberman.setDownBomerAT(bomberman.createAnimationTimer("down", gc));
-        // Tao root container
-        Group root = new Group();
-        root.getChildren().add(canvas);
-
-        // Tao scene
-        Scene scene = new Scene(root);
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
                     @Override
@@ -55,6 +59,7 @@ public class BombermanGame extends Application {
                     }
                 }
         );
+
         scene.setOnKeyReleased(
                 new EventHandler<KeyEvent>() {
                     @Override
@@ -63,14 +68,18 @@ public class BombermanGame extends Application {
                     }
                 }
         );
-        stage.setScene(scene);
-        stage.show();
+
         createMap();
+        stillObjects.forEach(g -> g.render(gcMap));
+        entities.forEach(g -> g.render(gcCharacter));
+        stage.show();
     }
 
-    //Can viet lai de nhan du lieu tu file txt
     public void createMap() {
-        String FullMap = "###############################\n" +
+        final char wall = '#', brick = '*', portal = 'x', bomber = 'p', balloon = '1',
+            oneal = '2', bombItemp = 'b', flameItem = 'f', speedItem = 's';
+
+        fullMap = "###############################\n" +
                 "#p     ** *  1 * 2 *  * * *   #\n" +
                 "# # # #*# # #*#*# # # #*#*#*# #\n" +
                 "#  x*     ***  *  1   * 2 * * #\n" +
@@ -83,56 +92,93 @@ public class BombermanGame extends Application {
                 "# #*# # # # # # #*# # # # # # #\n" +
                 "#           *   *  *          #\n" +
                 "###############################";
-        String[] map = FullMap.split("\n");
+        String[] map = fullMap.split("\n");
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Entity object;
                 if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
                     object = new Wall(i, j, Sprite.wall.getFxImage());
+                    stillObjects.add(object);
                 } else {
                     switch (map[j].charAt(i)) {
-                        case '*':
+                        case brick:
                             object = new Brick(i, j, Sprite.brick.getFxImage());
+                            stillObjects.add(object);
                             break;
-                        case 'x':
+                        case portal:
                             object = new Portal(i, j, Sprite.portal.getFxImage());
+                            stillObjects.add(object);
+                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
                             break;
-                        case '1':
+                        case balloon:
                             object = new Balloon(i, j, Sprite.balloom_left1.getFxImage());
                             entities.add(object);
                             break;
-                        case '2':
+                        case oneal:
                             object = new Oneal(i, j, Sprite.oneal_left1.getFxImage());
+                            entities.add(object);
                             break;
-                        case 'b':
+                        case bombItemp:
                             object = new BombItem(i, j, Sprite.powerup_bombs.getFxImage());
+                            stillObjects.add(object);
+                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
                             break;
-                        case 'f':
+                        case flameItem:
                             object = new FlameItem(i, j, Sprite.powerup_flames.getFxImage());
+                            stillObjects.add(object);
+                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
                             break;
-                        case 's':
+                        case speedItem:
                             object = new SpeedItem(i, j, Sprite.powerup_speed.getFxImage());
+                            stillObjects.add(object);
+                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
                             break;
-                        case '#':
+                        case wall:
                             object = new Wall(i, j, Sprite.wall.getFxImage());
+                            stillObjects.add(object);
                             break;
                         default:
                             object = new Grass(i, j, Sprite.grass.getFxImage());
+                            stillObjects.add(object);
                     }
                 }
-                stillObjects.add(object);
             }
         }
-        render();
     }
 
     public void update() {
         entities.forEach(Entity::update);
     }
 
-    public void render() {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
+    public static void setWIDTH(int WIDTH) {
+        BombermanGame.WIDTH = WIDTH;
+    }
+
+    public static int getWIDTH() {
+        return WIDTH;
+    }
+
+    public static void setHEIGHT(int HEIGHT) {
+        BombermanGame.HEIGHT = HEIGHT;
+    }
+
+    public static int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public String getFullMap() {
+        return fullMap;
     }
 }
