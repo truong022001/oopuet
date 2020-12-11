@@ -4,8 +4,6 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
@@ -18,11 +16,6 @@ public class BombermanGame extends Application {
     private static int HEIGHT = 13;
     private String fullMap;
     private int level;
-
-    private GraphicsContext gcMap;
-    private Canvas canvasMap;
-    public static GraphicsContext gcCharacter;
-    public static Canvas canvasCharacter;
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
 
@@ -36,20 +29,13 @@ public class BombermanGame extends Application {
         Group root = new Group();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        canvasMap = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        root.getChildren().add(canvasMap);
-        gcMap = canvasMap.getGraphicsContext2D();
-
-        canvasCharacter = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        root.getChildren().add(canvasCharacter);
-        gcCharacter = canvasCharacter.getGraphicsContext2D();
 
         Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
         entities.add(bomberman);
-        bomberman.setRightBomberAT(bomberman.createAnimationTimer("right", gcCharacter));
-        bomberman.setLeftBomberAT(bomberman.createAnimationTimer("left", gcCharacter));
-        bomberman.setUpBomberAT(bomberman.createAnimationTimer("up", gcCharacter));
-        bomberman.setDownBomerAT(bomberman.createAnimationTimer("down", gcCharacter));
+        bomberman.setRightBomberAT(bomberman.createAnimationTimer("right"));
+        bomberman.setLeftBomberAT(bomberman.createAnimationTimer("left"));
+        bomberman.setUpBomberAT(bomberman.createAnimationTimer("up"));
+        bomberman.setDownBomerAT(bomberman.createAnimationTimer("down"));
 
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
@@ -69,13 +55,13 @@ public class BombermanGame extends Application {
                 }
         );
 
-        createMap();
-        stillObjects.forEach(g -> g.render(gcMap));
-        entities.forEach(g -> g.render(gcCharacter));
+        createMap(root);
+        root.getChildren().add(bomberman.getImageView());
+        bomberman.createCheckTouchWall(stillObjects);
         stage.show();
     }
 
-    public void createMap() {
+    private void createMap(Group root) {
         final char wall = '#', brick = '*', portal = 'x', bomber = 'p', balloon = '1',
             oneal = '2', bombItemp = 'b', flameItem = 'f', speedItem = 's';
 
@@ -93,9 +79,9 @@ public class BombermanGame extends Application {
                 "#           *   *  *          #\n" +
                 "###############################";
         String[] map = fullMap.split("\n");
+        Entity object;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                Entity object;
                 if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
                     object = new Wall(i, j, Sprite.wall.getFxImage());
                     stillObjects.add(object);
@@ -108,7 +94,7 @@ public class BombermanGame extends Application {
                         case portal:
                             object = new Portal(i, j, Sprite.portal.getFxImage());
                             stillObjects.add(object);
-                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            object = new Brick(i, j, Sprite.brick.getFxImage());
                             stillObjects.add(object);
                             break;
                         case balloon:
@@ -122,19 +108,19 @@ public class BombermanGame extends Application {
                         case bombItemp:
                             object = new BombItem(i, j, Sprite.powerup_bombs.getFxImage());
                             stillObjects.add(object);
-                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            object = new Brick(i, j, Sprite.brick.getFxImage());
                             stillObjects.add(object);
                             break;
                         case flameItem:
                             object = new FlameItem(i, j, Sprite.powerup_flames.getFxImage());
                             stillObjects.add(object);
-                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            object = new Brick(i, j, Sprite.brick.getFxImage());
                             stillObjects.add(object);
                             break;
                         case speedItem:
                             object = new SpeedItem(i, j, Sprite.powerup_speed.getFxImage());
                             stillObjects.add(object);
-                            object = new Grass(i, j, Sprite.grass.getFxImage());
+                            object = new Brick(i, j, Sprite.brick.getFxImage());
                             stillObjects.add(object);
                             break;
                         case wall:
@@ -146,8 +132,11 @@ public class BombermanGame extends Application {
                             stillObjects.add(object);
                     }
                 }
+                root.getChildren().add(object.getImageView());
             }
         }
+        stillObjects.forEach(g -> g.render());
+        entities.forEach(g -> g.render());
     }
 
     public void update() {

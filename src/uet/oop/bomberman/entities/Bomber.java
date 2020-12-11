@@ -1,26 +1,27 @@
 package uet.oop.bomberman.entities;
 
 import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import uet.oop.bomberman.BombermanGame;
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.List;
+
 public class Bomber extends Entity {
-    private int velocity = 2;
+    private final int velocity = 2;
+    private int velocityX;
+    private int velocityY;
+    private CheckTouchWall checkTouchWall;
     private AnimationTimer leftBomberAT;
     private AnimationTimer rightBomberAT;
     private AnimationTimer upBomberAT;
     private AnimationTimer downBomerAT;
-    private boolean visible = true;
+    private Rectangle bomberCollisionShape;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
+        bomberCollisionShape = new Rectangle(x, y, 14, 22);
     }
 
     @Override
@@ -28,10 +29,16 @@ public class Bomber extends Entity {
     }
 
     @Override
-    public void render(GraphicsContext gc) {
-        gc.clearRect(0, 0, Sprite.SCALED_SIZE * BombermanGame.getWIDTH(),
-                Sprite.SCALED_SIZE * BombermanGame.getHEIGHT());
-        gc.drawImage(img, x, y);
+    public void render() {
+        imageView.setImage(img);
+        imageView.setX(getX());
+        imageView.setY(getY());
+    }
+
+    public void move() {
+        this.setX(getX() + velocityX);
+        this.setY(getY() + velocityY);
+        render();
     }
 
     public void keyPressed(KeyEvent e) {
@@ -70,34 +77,44 @@ public class Bomber extends Entity {
                 this.img = Sprite.player_down.getFxImage();
                 break;
         }
-        render(BombermanGame.gcCharacter);
+        render();
     }
 
-    public AnimationTimer createAnimationTimer(String direction, GraphicsContext gc) {
+    public AnimationTimer createAnimationTimer(String direction) {
         return new AnimationTimer() {
             boolean isFrame1 = true;
             long lastTime = 0;
             public void handle(long now) {
-                switch (direction) {
-                    case "left":
-                        setX(getX() - velocity);
-                        break;
-                    case "right":
-                        setX(getX() + velocity);
-                        break;
-                    case "up":
-                        setY(getY() - velocity);
-                        break;
-                    case "down":
-                        setY(getY() + velocity);
-                        break;
+                if (!checkTouchWall.Touch(getCollishionShape())) {
+                    switch (direction) {
+                        case "left":
+                            velocityX = -velocity;
+                            velocityY = 0;
+                            break;
+                        case "right":
+                            velocityX = velocity;
+                            velocityY = 0;
+                            break;
+                        case "up":
+                            velocityX = 0;
+                            velocityY = -velocity;
+                            break;
+                        case "down":
+                            velocityX = 0;
+                            velocityY = velocity;
+                            break;
+                    }
+                } else {
+                    System.out.println("Touch wall");
+                    velocityX *= -1;
+                    velocityY *= -1;
                 }
                 if (now - lastTime > 200000000) {
                     setImageFrame(direction, isFrame1);
                     isFrame1 = !isFrame1;
                     lastTime = now;
                 }
-                render(gc);
+                move();
             }
         };
     }
@@ -135,12 +152,35 @@ public class Bomber extends Entity {
         }
     }
 
-    public int getVelocity() {
-        return velocity;
+    public void createCheckTouchWall(List<Entity> stillObjects) {
+        checkTouchWall = new CheckTouchWall();
+        for (int i = 0; i < stillObjects.size(); i++) {
+            Entity object = stillObjects.get(i);
+            if (object instanceof Wall) {
+                Wall obj = (Wall)object;
+                checkTouchWall.addObstacle(obj);
+            }
+            if (object instanceof Brick) {
+                Brick obj1 = (Brick)object;
+                checkTouchWall.addObstacle(obj1);
+            }
+        }
     }
 
-    public void setVelocity(int velocity) {
-        this.velocity = velocity;
+    public int getVelocityX() {
+        return velocityX;
+    }
+
+    public void setVelocityX(int velocityX) {
+        this.velocityX = velocityX;
+    }
+
+    public int getVelocityY() {
+        return velocityY;
+    }
+
+    public void setVelocityY(int velocityY) {
+        this.velocityY = velocityY;
     }
 
     public void setDownBomerAT(AnimationTimer downBomerAT) {
@@ -157,6 +197,12 @@ public class Bomber extends Entity {
 
     public void setRightBomberAT(AnimationTimer rightBomberAT) {
         this.rightBomberAT = rightBomberAT;
+    }
+
+    public Rectangle getCollishionShape() {
+        bomberCollisionShape.setX(x + 4);
+        bomberCollisionShape.setY(y + 2);
+        return bomberCollisionShape;
     }
 
 }
