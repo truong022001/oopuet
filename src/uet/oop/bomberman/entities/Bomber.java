@@ -162,7 +162,7 @@ public class Bomber extends Entity {
 
     public Rectangle getCollishionShape() {
         bomberCollisionShape.setX(x + 4);
-        bomberCollisionShape.setY(y + 4);
+        bomberCollisionShape.setY(y + 2);
         return bomberCollisionShape;
     }
 

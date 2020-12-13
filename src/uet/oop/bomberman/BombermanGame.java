@@ -146,12 +146,10 @@ public class BombermanGame extends Application {
 
             }
         }
-        //stillObjects.forEach(g -> g.render());
         for (Entity i:stillObjects) {
             root.getChildren().add(i.getImageView());
             i.render();
         }
-        //entities.forEach(g -> g.render());
         for (Entity i:entities) {
             root.getChildren().add(i.getImageView());
             i.render();

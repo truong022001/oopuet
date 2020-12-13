@@ -3,46 +3,20 @@ package uet.oop.bomberman.entities;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
-
-import static javafx.scene.input.KeyCode.*;
 
 public class Oneal extends Entity {
     private int velocity = 3;
     private String direction;
-    private AnimationTimer leftOneal;
-    private AnimationTimer rightOneal;
-    private AnimationTimer upOneal;
-    private AnimationTimer downOneal;
+    private AnimationTimer realOneal;
     private int velocityX;
     private int velocityY;
-    private CheckTouchWall checkTouchWall;
+    private CheckTouchWall checkTouchWall=new CheckTouchWall();
     private boolean alive = true;
     private Rectangle bomberCollisionShape;
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
         bomberCollisionShape = new Rectangle(x, y, 14, 22);
-    }
-
-    @Override
-    public void setX(int x) {
-        super.setX(x);
-    }
-
-    @Override
-    public void setY(int y) {
-        super.setY(y);
-    }
-
-    @Override
-    public int getX() {
-        return super.getX();
-    }
-
-    @Override
-    public int getY() {
-        return super.getY();
     }
 
     public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
@@ -51,10 +25,7 @@ public class Oneal extends Entity {
 
     @Override
     public void update() {
-        leftOneal=createAnimationTimer("left");
-        rightOneal=createAnimationTimer("right");
-        upOneal=createAnimationTimer("up");
-        downOneal=createAnimationTimer("down");
+        realOneal=createAnimationTimer();
         moveStart();
     }
 
@@ -66,21 +37,8 @@ public class Oneal extends Entity {
     }
 
     public void moveStart() {
-        direction = randomDirection();
-        switch (direction) {
-            case "left":
-                leftOneal.start();
-                break;
-            case "right":
-                rightOneal.start();
-                break;
-            case "up":
-                upOneal.start();
-                break;
-            case "down":
-                downOneal.start();
-                break;
-        }
+        direction=randomDirection();
+        realOneal.start();
 
     }
     public void move(){
@@ -88,7 +46,7 @@ public class Oneal extends Entity {
         this.setY(getY() + velocityY);
         render();
     }
-    public AnimationTimer createAnimationTimer(String dir) {
+    public AnimationTimer createAnimationTimer() {
         return new AnimationTimer() {
             boolean isFrame1 = true;
             long lastTime = 0;
@@ -113,7 +71,6 @@ public class Oneal extends Entity {
                             break;
                     }
                 } else {
-                    System.out.println("Touch wall");
                     velocityX *= -1;
                     velocityY *= -1;
                     direction=randomDirection();
@@ -160,29 +117,9 @@ public class Oneal extends Entity {
         }
     }
 
-    public AnimationTimer getDownOneal() {
-        return downOneal;
-    }
-
-    public void setDownOneal(AnimationTimer downOneal) {
-        this.downOneal = downOneal;
-    }
-
-    public void setLeftOneal(AnimationTimer leftOneal) {
-        this.leftOneal = leftOneal;
-    }
-
-    public void setRightOneal(AnimationTimer rightOneal) {
-        this.rightOneal = rightOneal;
-    }
-
-    public void setUpOneal(AnimationTimer upOneal) {
-        this.upOneal = upOneal;
-    }
-
     public Rectangle getCollishionShape() {
         bomberCollisionShape.setX(x + 4);
-        bomberCollisionShape.setY(y + 4);
+        bomberCollisionShape.setY(y + 2);
         return bomberCollisionShape;
     }
 }
