@@ -24,8 +24,16 @@ public class Bomber extends Entity {
         bomberCollisionShape = new Rectangle(x, y, 14, 22);
     }
 
+    public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
+        this.checkTouchWall = checkTouchWall;
+    }
+
     @Override
     public void update() {
+        leftBomberAT=createAnimationTimer("left");
+        rightBomberAT=createAnimationTimer("right");
+        upBomberAT=createAnimationTimer("up");
+        downBomerAT=createAnimationTimer("down");
     }
 
     @Override
@@ -152,56 +160,9 @@ public class Bomber extends Entity {
         }
     }
 
-    public void createCheckTouchWall(List<Entity> stillObjects) {
-        checkTouchWall = new CheckTouchWall();
-        for (int i = 0; i < stillObjects.size(); i++) {
-            Entity object = stillObjects.get(i);
-            if (object instanceof Wall) {
-                Wall obj = (Wall)object;
-                checkTouchWall.addObstacle(obj);
-            }
-            if (object instanceof Brick) {
-                Brick obj1 = (Brick)object;
-                checkTouchWall.addObstacle(obj1);
-            }
-        }
-    }
-
-    public int getVelocityX() {
-        return velocityX;
-    }
-
-    public void setVelocityX(int velocityX) {
-        this.velocityX = velocityX;
-    }
-
-    public int getVelocityY() {
-        return velocityY;
-    }
-
-    public void setVelocityY(int velocityY) {
-        this.velocityY = velocityY;
-    }
-
-    public void setDownBomerAT(AnimationTimer downBomerAT) {
-        this.downBomerAT = downBomerAT;
-    }
-
-    public void setUpBomberAT(AnimationTimer upBomberAT) {
-        this.upBomberAT = upBomberAT;
-    }
-
-    public void setLeftBomberAT(AnimationTimer leftBomberAT) {
-        this.leftBomberAT = leftBomberAT;
-    }
-
-    public void setRightBomberAT(AnimationTimer rightBomberAT) {
-        this.rightBomberAT = rightBomberAT;
-    }
-
     public Rectangle getCollishionShape() {
         bomberCollisionShape.setX(x + 4);
-        bomberCollisionShape.setY(y + 2);
+        bomberCollisionShape.setY(y + 4);
         return bomberCollisionShape;
     }
 

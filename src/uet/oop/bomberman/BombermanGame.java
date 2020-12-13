@@ -4,12 +4,17 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
+//import static uet.oop.bomberman.entities.CheckTouchWall.createCheckTouchWall;
 
 public class BombermanGame extends Application {
     private static int WIDTH = 31;
@@ -17,8 +22,10 @@ public class BombermanGame extends Application {
     private String fullMap;
     private int level;
     private List<Entity> entities = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
-
+    static List<Entity> stillObjects = new ArrayList<>();
+    private CheckTouchWall checkTouchWall=new CheckTouchWall();
+    public static GraphicsContext gcCharacter;
+    public static Canvas canvasCharacter;
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -32,11 +39,6 @@ public class BombermanGame extends Application {
 
         Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
         entities.add(bomberman);
-        bomberman.setRightBomberAT(bomberman.createAnimationTimer("right"));
-        bomberman.setLeftBomberAT(bomberman.createAnimationTimer("left"));
-        bomberman.setUpBomberAT(bomberman.createAnimationTimer("up"));
-        bomberman.setDownBomerAT(bomberman.createAnimationTimer("down"));
-
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
                     @Override
@@ -56,8 +58,17 @@ public class BombermanGame extends Application {
         );
 
         createMap(root);
-        root.getChildren().add(bomberman.getImageView());
-        bomberman.createCheckTouchWall(stillObjects);
+        update();
+        checkTouchWall.createCheckTouchWall(stillObjects);
+        bomberman.setCheckTouchWall(checkTouchWall);
+        for (Entity i: entities) {
+            if (i instanceof Oneal ) {
+                ((Oneal) i).setCheckTouchWall(checkTouchWall);
+            }
+            if (i instanceof Balloon) {
+                ((Balloon) i).setCheckTouchWall(checkTouchWall);
+            }
+        }
         stage.show();
     }
 
@@ -98,11 +109,11 @@ public class BombermanGame extends Application {
                             stillObjects.add(object);
                             break;
                         case balloon:
-                            object = new Balloon(i, j, Sprite.balloom_left1.getFxImage());
+                            object = new Balloon(i*Sprite.SCALED_SIZE, j*Sprite.SCALED_SIZE, Sprite.balloom_left1.getFxImage());
                             entities.add(object);
                             break;
                         case oneal:
-                            object = new Oneal(i, j, Sprite.oneal_left1.getFxImage());
+                            object = new Oneal(i*Sprite.SCALED_SIZE, j*Sprite.SCALED_SIZE, Sprite.oneal_left1.getFxImage());
                             entities.add(object);
                             break;
                         case bombItemp:
@@ -132,11 +143,19 @@ public class BombermanGame extends Application {
                             stillObjects.add(object);
                     }
                 }
-                root.getChildren().add(object.getImageView());
+
             }
         }
-        stillObjects.forEach(g -> g.render());
-        entities.forEach(g -> g.render());
+        //stillObjects.forEach(g -> g.render());
+        for (Entity i:stillObjects) {
+            root.getChildren().add(i.getImageView());
+            i.render();
+        }
+        //entities.forEach(g -> g.render());
+        for (Entity i:entities) {
+            root.getChildren().add(i.getImageView());
+            i.render();
+        }
     }
 
     public void update() {

@@ -21,4 +21,18 @@ public class CheckTouchWall {
         }
         return false;
     }
+    public void createCheckTouchWall(List<Entity> stillObjects) {
+        //checkTouchWall = new CheckTouchWall();
+        for (int i = 0; i < stillObjects.size(); i++) {
+            Entity object = stillObjects.get(i);
+            if (object instanceof Wall) {
+                Wall obj = (Wall)object;
+                obstacles.add(obj);
+            }
+            if (object instanceof Brick) {
+                Brick obj1 = (Brick)object;
+                obstacles.add(obj1);
+            }
+        }
+    }
 }
