@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.LoadLevelGame.LoadLevel;
 import uet.oop.bomberman.graphics.Sprite;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class BombermanGame extends Application {
     private static List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
     private CheckTouchWall checkTouchWall = new CheckTouchWall();
+    private static Group root;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -25,11 +27,12 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         stage.setTitle("Bomberman Game");
-        Group root = new Group();
+        root = new Group();
         Scene scene = new Scene(root);
         stage.setScene(scene);
 
         Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
+        bomberman.setRoot(root);
         entities.add(bomberman);
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
@@ -99,5 +102,9 @@ public class BombermanGame extends Application {
 
     public static void addStillObject(Entity stillObj) {
         stillObjects.add(stillObj);
+    }
+
+    public static Group getRoot() {
+        return root;
     }
 }

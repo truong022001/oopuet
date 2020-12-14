@@ -1,49 +1,42 @@
 package uet.oop.bomberman.entities;
 
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Bomber extends Entity {
     private int velocity = 2;
     private int velocityX;
     private int velocityY;
-    private Bomb bomb=new Bomb(0,0,Sprite.bomb.getFxImage());
-    //private Group root;
+    private long timePlaceBomb;
+    private boolean isPowerUpBomb;
+    private Bomb bomb;
     private CheckTouchWall checkTouchWall;
     private AnimationTimer leftBomberAT;
     private AnimationTimer rightBomberAT;
     private AnimationTimer upBomberAT;
     private AnimationTimer downBomerAT;
     private Rectangle bomberCollisionShape;
-    private boolean isBombPlaced=false;
+    private boolean isBombPlaced = false;
+
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
+        isPowerUpBomb = false;
+        timePlaceBomb = -2000;
         bomberCollisionShape = new Rectangle(x, y, 16, 24);
-    }
-
-
-    public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
-        this.checkTouchWall = checkTouchWall;
-    }
-    public void setBomb(Bomb bomb) {
-        this.bomb = bomb;
-    }
-    public Bomb getBomb() {
-        return bomb;
-    }
-    @Override
-    public void update() {
         leftBomberAT = createAnimationTimer("left");
         rightBomberAT = createAnimationTimer("right");
         upBomberAT = createAnimationTimer("up");
         downBomerAT = createAnimationTimer("down");
     }
+
+    @Override
+    public void update() {
+    }
+
     @Override
     public void render() {
         imageView.setImage(img);
@@ -72,14 +65,16 @@ public class Bomber extends Entity {
                 this.downBomerAT.start();
                 break;
             case SPACE:
-                bomb.setX(x);
-                bomb.setY(y);
-                root.getChildren().add(bomb.getImageView());
-                bomb.bombStart();
+                if ((!isPowerUpBomb && System.currentTimeMillis() - timePlaceBomb >= 1800)
+                    || (isPowerUpBomb && System.currentTimeMillis() - timePlaceBomb >= 700)) {
+                    bomb = new Bomb(x, y, Sprite.bomb.getFxImage());
+                    timePlaceBomb = System.currentTimeMillis();
+                    root.getChildren().add(bomb.getImageView());
+                    bomb.bombStart();
+                }
                 break;
         }
     }
-
 
     public void keyReleased(KeyEvent e) {
         switch(e.getCode()) {
@@ -102,7 +97,6 @@ public class Bomber extends Entity {
         }
         render();
     }
-
 
     public AnimationTimer createAnimationTimer(String direction) {
         return new AnimationTimer() {
@@ -188,5 +182,9 @@ public class Bomber extends Entity {
 
     public int getVelocity() {
         return velocity;
+    }
+
+    public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
+        this.checkTouchWall = checkTouchWall;
     }
 }
