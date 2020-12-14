@@ -17,6 +17,7 @@ public class BombermanGame extends Application {
     private static List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
     private CheckTouchWall checkTouchWall = new CheckTouchWall();
+
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -49,6 +50,7 @@ public class BombermanGame extends Application {
 
         createMapGame(level, root);
         update();
+
         checkTouchWall.createCheckTouchWall(stillObjects);
         bomberman.setCheckTouchWall(checkTouchWall);
         for (Entity i: entities) {
@@ -59,6 +61,7 @@ public class BombermanGame extends Application {
                 ((Balloon) i).setCheckTouchWall(checkTouchWall);
             }
         }
+
         stage.show();
     }
 
@@ -68,14 +71,18 @@ public class BombermanGame extends Application {
 
     public void createMapGame(int level, Group root) {
         LoadLevel.createMap(level, root);
-        for (Entity i:stillObjects) {
+        for (Entity i : stillObjects) {
             root.getChildren().add(i.getImageView());
             i.render();
         }
-        for (Entity i:entities) {
+        for (Entity i : entities) {
             root.getChildren().add(i.getImageView());
             i.render();
         }
+    }
+
+    public static void getImageOfBomb(Group root,Bomb bomb){
+        root.getChildren().remove(bomb.getImageView());
     }
 
     public void setLevel(int level) {

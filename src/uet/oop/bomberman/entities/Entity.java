@@ -1,5 +1,6 @@
 package uet.oop.bomberman.entities;
 
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import uet.oop.bomberman.graphics.Sprite;
@@ -9,12 +10,16 @@ public abstract class Entity {
     protected int y;
     protected Image img;
     protected ImageView imageView;
-
+    protected Group root;
     public Entity( int x, int y, Image img) {
         this.x = x;
         this.y = y;
         this.img = img;
         this.imageView = new ImageView(img);
+    }
+
+    public void setRoot(Group root) {
+        this.root = root;
     }
 
     public void render() {
@@ -44,5 +49,9 @@ public abstract class Entity {
 
     public ImageView getImageView() {
         return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
     }
 }
