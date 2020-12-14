@@ -6,17 +6,18 @@ import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Oneal extends Entity {
-    private int velocity = 3;
+    private int velocity = 2;
     private String direction;
     private AnimationTimer realOneal;
     private int velocityX;
     private int velocityY;
     private CheckTouchWall checkTouchWall=new CheckTouchWall();
     private boolean alive = true;
-    private Rectangle bomberCollisionShape;
+    private Rectangle onealCollisionShape;
+
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
-        bomberCollisionShape = new Rectangle(x, y, 14, 22);
+        onealCollisionShape = new Rectangle(x, y, 28, 28);
     }
 
     public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
@@ -37,43 +38,43 @@ public class Oneal extends Entity {
     }
 
     public void moveStart() {
-        direction=randomDirection();
+        direction = randomDirection();
         realOneal.start();
-
     }
+
     public void move(){
         this.setX(getX() + velocityX);
         this.setY(getY() + velocityY);
         render();
     }
+
     public AnimationTimer createAnimationTimer() {
         return new AnimationTimer() {
             boolean isFrame1 = true;
             long lastTime = 0;
             public void handle(long now) {
-                if (!checkTouchWall.Touch(getCollishionShape())) {
-                    switch (direction) {
-                        case "left":
-                            velocityX = -velocity;
-                            velocityY = 0;
-                            break;
-                        case "right":
-                            velocityX = velocity;
-                            velocityY = 0;
-                            break;
-                        case "up":
-                            velocityX = 0;
-                            velocityY = -velocity;
-                            break;
-                        case "down":
-                            velocityX = 0;
-                            velocityY = velocity;
-                            break;
-                    }
-                } else {
-                    velocityX *= -1;
-                    velocityY *= -1;
-                    direction=randomDirection();
+                switch (direction) {
+                    case "left":
+                        velocityX = -velocity;
+                        velocityY = 0;
+                        break;
+                    case "right":
+                        velocityX = velocity;
+                        velocityY = 0;
+                        break;
+                    case "up":
+                        velocityX = 0;
+                        velocityY = -velocity;
+                        break;
+                    case "down":
+                        velocityX = 0;
+                        velocityY = velocity;
+                        break;
+                }
+                if (checkTouchWall.Touch(getCollishionShape())) {
+                    velocityX = 0;
+                    velocityY = 0;
+                    direction = randomDirection();
                 }
                 if (now - lastTime > 200000000) {
                     setImageFrame(isFrame1);
@@ -84,6 +85,7 @@ public class Oneal extends Entity {
             }
         };
     }
+
     private void setImageFrame(boolean isFrame1) {
         switch (direction) {
             case "left":
@@ -104,6 +106,7 @@ public class Oneal extends Entity {
                 break;
         }
     }
+
     private String randomDirection() {
         int r = 0 + (int) (Math.random() * ((3 - 0) + 1));
         if (r == 0) {
@@ -118,9 +121,9 @@ public class Oneal extends Entity {
     }
 
     public Rectangle getCollishionShape() {
-        bomberCollisionShape.setX(x + 4);
-        bomberCollisionShape.setY(y + 2);
-        return bomberCollisionShape;
+        onealCollisionShape.setX(x + 2 + velocityX);
+        onealCollisionShape.setY(y + 2 + velocityY);
+        return onealCollisionShape;
     }
 }
 

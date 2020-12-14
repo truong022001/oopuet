@@ -6,10 +6,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.List;
-
 public class Bomber extends Entity {
-    private final int velocity = 2;
+    private int velocity = 2;
     private int velocityX;
     private int velocityY;
     private CheckTouchWall checkTouchWall;
@@ -21,7 +19,7 @@ public class Bomber extends Entity {
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
-        bomberCollisionShape = new Rectangle(x, y, 14, 22);
+        bomberCollisionShape = new Rectangle(x, y, 16, 24);
     }
 
     public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
@@ -30,10 +28,10 @@ public class Bomber extends Entity {
 
     @Override
     public void update() {
-        leftBomberAT=createAnimationTimer("left");
-        rightBomberAT=createAnimationTimer("right");
-        upBomberAT=createAnimationTimer("up");
-        downBomerAT=createAnimationTimer("down");
+        leftBomberAT = createAnimationTimer("left");
+        rightBomberAT = createAnimationTimer("right");
+        upBomberAT = createAnimationTimer("up");
+        downBomerAT = createAnimationTimer("down");
     }
 
     @Override
@@ -93,31 +91,30 @@ public class Bomber extends Entity {
             boolean isFrame1 = true;
             long lastTime = 0;
             public void handle(long now) {
-                if (!checkTouchWall.Touch(getCollishionShape())) {
-                    switch (direction) {
-                        case "left":
-                            velocityX = -velocity;
-                            velocityY = 0;
-                            break;
-                        case "right":
-                            velocityX = velocity;
-                            velocityY = 0;
-                            break;
-                        case "up":
-                            velocityX = 0;
-                            velocityY = -velocity;
-                            break;
-                        case "down":
-                            velocityX = 0;
-                            velocityY = velocity;
-                            break;
-                    }
-                } else {
-                    System.out.println("Touch wall");
-                    velocityX *= -1;
-                    velocityY *= -1;
+                switch (direction) {
+                    case "left":
+                        velocityX = -velocity;
+                        velocityY = 0;
+                        break;
+                    case "right":
+                        velocityX = velocity;
+                        velocityY = 0;
+                        break;
+                    case "up":
+                        velocityX = 0;
+                        velocityY = -velocity;
+                        break;
+                    case "down":
+                        velocityX = 0;
+                        velocityY = velocity;
+                        break;
                 }
-                if (now - lastTime > 200000000) {
+                if (checkTouchWall.Touch(getCollishionShape())) {
+                    System.out.println("Touch wall");
+                    velocityX = 0;
+                    velocityY = 0;
+                }
+                if (now - lastTime > 150000000) {
                     setImageFrame(direction, isFrame1);
                     isFrame1 = !isFrame1;
                     lastTime = now;
@@ -161,9 +158,16 @@ public class Bomber extends Entity {
     }
 
     public Rectangle getCollishionShape() {
-        bomberCollisionShape.setX(x + 4);
-        bomberCollisionShape.setY(y + 2);
+        bomberCollisionShape.setX(x + 2 + velocityX);
+        bomberCollisionShape.setY(y + 6 + velocityY);
         return bomberCollisionShape;
     }
 
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
+    }
+
+    public int getVelocity() {
+        return velocity;
+    }
 }
