@@ -1,9 +1,12 @@
 package uet.oop.bomberman.entities;
 
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.Rectangle;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -12,22 +15,30 @@ public class Bomber extends Entity {
     private final int velocity = 2;
     private int velocityX;
     private int velocityY;
+    private Bomb bomb=new Bomb(0,0,Sprite.bomb.getFxImage());
+    //private Group root;
     private CheckTouchWall checkTouchWall;
     private AnimationTimer leftBomberAT;
     private AnimationTimer rightBomberAT;
     private AnimationTimer upBomberAT;
     private AnimationTimer downBomerAT;
     private Rectangle bomberCollisionShape;
-
+    private boolean isBombPlaced=false;
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
         bomberCollisionShape = new Rectangle(x, y, 14, 22);
     }
 
+
     public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
         this.checkTouchWall = checkTouchWall;
     }
-
+    public void setBomb(Bomb bomb) {
+        this.bomb = bomb;
+    }
+    public Bomb getBomb() {
+        return bomb;
+    }
     @Override
     public void update() {
         leftBomberAT=createAnimationTimer("left");
@@ -35,7 +46,6 @@ public class Bomber extends Entity {
         upBomberAT=createAnimationTimer("up");
         downBomerAT=createAnimationTimer("down");
     }
-
     @Override
     public void render() {
         imageView.setImage(img);
@@ -63,8 +73,15 @@ public class Bomber extends Entity {
             case DOWN:
                 this.downBomerAT.start();
                 break;
+            case SPACE:
+                bomb.setX(x);
+                bomb.setY(y);
+                root.getChildren().add(bomb.getImageView());
+                bomb.bombStart();
+                break;
         }
     }
+
 
     public void keyReleased(KeyEvent e) {
         switch(e.getCode()) {
@@ -88,10 +105,12 @@ public class Bomber extends Entity {
         render();
     }
 
+
     public AnimationTimer createAnimationTimer(String direction) {
         return new AnimationTimer() {
             boolean isFrame1 = true;
             long lastTime = 0;
+
             public void handle(long now) {
                 if (!checkTouchWall.Touch(getCollishionShape())) {
                     switch (direction) {
@@ -117,7 +136,7 @@ public class Bomber extends Entity {
                     velocityX *= -1;
                     velocityY *= -1;
                 }
-                if (now - lastTime > 200000000) {
+                if (now - lastTime > 200000000) {  // don vi ns
                     setImageFrame(direction, isFrame1);
                     isFrame1 = !isFrame1;
                     lastTime = now;

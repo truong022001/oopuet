@@ -21,19 +21,16 @@ public class BombermanGame extends Application {
     private static int HEIGHT = 13;
     private String fullMap;
     private int level;
-    private List<Entity> entities = new ArrayList<>();
+    private Group root=new Group();
+    static List<Entity> entities = new ArrayList<>();
     static List<Entity> stillObjects = new ArrayList<>();
     private CheckTouchWall checkTouchWall=new CheckTouchWall();
-    public static GraphicsContext gcCharacter;
-    public static Canvas canvasCharacter;
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
-
     @Override
     public void start(Stage stage) {
         stage.setTitle("Bomberman Game");
-        Group root = new Group();
         Scene scene = new Scene(root);
         stage.setScene(scene);
 
@@ -56,8 +53,18 @@ public class BombermanGame extends Application {
                     }
                 }
         );
+        createMap();
+        for (Entity i:stillObjects) {
+            root.getChildren().add(i.getImageView());
+            i.render();
+        }
 
-        createMap(root);
+        for (Entity i:entities) {
+            root.getChildren().add(i.getImageView());
+            i.render();
+        }
+        bomberman.setRoot(root);
+        //root.getChildren().remove(bomberman.getImageView()); cách để loại bỏ animation
         update();
         checkTouchWall.createCheckTouchWall(stillObjects);
         bomberman.setCheckTouchWall(checkTouchWall);
@@ -72,7 +79,7 @@ public class BombermanGame extends Application {
         stage.show();
     }
 
-    private void createMap(Group root) {
+    private void createMap() {
         final char wall = '#', brick = '*', portal = 'x', bomber = 'p', balloon = '1',
             oneal = '2', bombItemp = 'b', flameItem = 'f', speedItem = 's';
 
@@ -146,14 +153,9 @@ public class BombermanGame extends Application {
 
             }
         }
-        for (Entity i:stillObjects) {
-            root.getChildren().add(i.getImageView());
-            i.render();
-        }
-        for (Entity i:entities) {
-            root.getChildren().add(i.getImageView());
-            i.render();
-        }
+    }
+    public static void getImageOfBomb(Group root,Bomb bomb){
+        root.getChildren().remove(bomb.getImageView());
     }
 
     public void update() {
