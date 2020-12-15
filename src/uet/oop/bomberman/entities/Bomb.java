@@ -35,11 +35,7 @@ public class Bomb extends Entity {
         flameUp=new Flame(x,y-Sprite.SCALED_SIZE,Sprite.explosion_vertical_top_last.getFxImage());
         flameLeft=new Flame(x-Sprite.SCALED_SIZE,y,Sprite.explosion_horizontal_left_last.getFxImage());
         flameRight=new Flame(x+Sprite.SCALED_SIZE,y,Sprite.explosion_horizontal_right_last.getFxImage());
-        BombermanGame.getRoot().getChildren().add(flame.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameUp.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameDown.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameLeft.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameRight.getImageView());
+
         return new AnimationTimer() {
             boolean isFrame1 = true;
             long lastTime = 0;
@@ -49,21 +45,24 @@ public class Bomb extends Entity {
                 if (now - lastTime > 500000000) {
                     setBombImageFrame(isFrame1);
                     if (count<=2) {
+
+                        if (count==2) {
+                            BombermanGame.getRoot().getChildren().remove(getImageView());
+                            BombermanGame.getRoot().getChildren().add(flame.getImageView());
+                            BombermanGame.getRoot().getChildren().add(flameUp.getImageView());
+                            BombermanGame.getRoot().getChildren().add(flameDown.getImageView());
+                            BombermanGame.getRoot().getChildren().add(flameLeft.getImageView());
+                            BombermanGame.getRoot().getChildren().add(flameRight.getImageView());
+                        }
+                        flameRender();
                         setFlameImageFrame(isFrame1);
+
                     }
                     isFrame1 = !isFrame1;
                     lastTime = now;
                     count--;
                 }
-                if (count <= 2) {
-                    BombermanGame.getRoot().getChildren().remove(getImageView());
-                    flame.render();
-                    flameUp.render();
-                    flameDown.render();
-                    flameLeft.render();
-                    flameRight.render();
-                }
-                if (count<=-1) {
+                if (count<=-2) {
                     BombermanGame.getRoot().getChildren().remove(flame.getImageView());
                     BombermanGame.getRoot().getChildren().remove(flameUp.getImageView());
                     BombermanGame.getRoot().getChildren().remove(flameDown.getImageView());
@@ -74,6 +73,14 @@ public class Bomb extends Entity {
                 render();
             }
         };
+    }
+    public void flameRender(){
+        flame.render();
+        flameUp.render();
+        flameDown.render();
+        flameLeft.render();
+        flameRight.render();
+
     }
 
     private void setBombImageFrame(boolean isFrame1) {
