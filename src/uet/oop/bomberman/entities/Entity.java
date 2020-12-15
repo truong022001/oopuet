@@ -1,31 +1,57 @@
 package uet.oop.bomberman.entities;
 
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
     protected int x;
     protected int y;
     protected Image img;
-
+    protected ImageView imageView;
+    protected Group root;
     public Entity( int x, int y, Image img) {
         this.x = x;
         this.y = y;
         this.img = img;
+        this.imageView = new ImageView(img);
     }
 
-    public void render(GraphicsContext gc) {
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-
-        ImageView iv = new ImageView(img);
-        Image base = iv.snapshot(params, null);
-
-        gc.drawImage(base, x * Sprite.SCALED_SIZE, y * Sprite.SCALED_SIZE);
+    public void setRoot(Group root) {
+        this.root = root;
     }
+
+    public void render() {
+        imageView.setImage(img);
+        imageView.setX(getX() * Sprite.SCALED_SIZE);
+        imageView.setY(getY() * Sprite.SCALED_SIZE);
+    }
+
     public abstract void update();
+
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
 }

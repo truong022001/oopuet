@@ -1,27 +1,24 @@
 package uet.oop.bomberman;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.LoadLevelGame.LoadLevel;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
-
-    public static final int WIDTH = 31;
-    public static final int HEIGHT = 13;
-
-    private GraphicsContext gc;
-    private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
+    private static int level = 1;
+    private static List<Entity> entities = new ArrayList<>();
+    private static List<Entity> stillObjects = new ArrayList<>();
+    private CheckTouchWall checkTouchWall = new CheckTouchWall();
+    private static Group root;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -29,95 +26,85 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
-        // Tao Canvas
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
-        gc = canvas.getGraphicsContext2D();
-
-        // Tao root container
-        Group root = new Group();
-        root.getChildren().add(canvas);
-
-        // Tao scene
+        stage.setTitle("Bomberman Game");
+        root = new Group();
         Scene scene = new Scene(root);
-
-        // Them scene vao stage
         stage.setScene(scene);
-        stage.show();
 
-        AnimationTimer timer = new AnimationTimer() {
-            @Override
-            public void handle(long l) {
-                render();
-                update();
-            }
-        };
-        timer.start();
-
-        createMap();
-
-        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
+        Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
+        bomberman.setRoot(root);
         entities.add(bomberman);
-    }
-
-    public void createMap() {
-        String FullMap = "###############################\n" +
-                "#p     ** *  1 * 2 *  * * *   #\n" +
-                "# # # #*# # #*#*# # # #*#*#*# #\n" +
-                "#  x*     ***  *  1   * 2 * * #\n" +
-                "# # # # # #*# # #*#*# # # # #*#\n" +
-                "#f         x **  *  *   1     #\n" +
-                "# # # # # # # # # #*# #*# # # #\n" +
-                "#*  *      *  *      *        #\n" +
-                "# # # # #*# # # #*#*# # # # # #\n" +
-                "#*    **  *       *           #\n" +
-                "# #*# # # # # # #*# # # # # # #\n" +
-                "#           *   *  *          #\n" +
-                "###############################";
-        String[] map = FullMap.split("\n");
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                Entity object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-                    object = new Wall(i, j, Sprite.wall.getFxImage());
-                } else {
-                    switch (map[j].charAt(i)) {
-                        case '*':
-                            object = new Brick(i, j, Sprite.brick.getFxImage());
-                            break;
-                        case 'x':
-                            object = new Portal(i, j, Sprite.portal.getFxImage());
-                            break;
-                        case '1':
-                            object = new Balloon(i, j, Sprite.balloom_left1.getFxImage());
-                            break;
-                        case '2':
-                            object = new Oneal(i, j, Sprite.oneal_left1.getFxImage());
-                            break;
-                        case 'b':
-                            object = new BombItem(i, j, Sprite.powerup_bombs.getFxImage());
-                            break;
-                        case 'f':
-                            object = new FlameItem(i, j, Sprite.powerup_flames.getFxImage());
-                            break;
-                        case 's':
-                            object = new SpeedItem(i, j, Sprite.powerup_speed.getFxImage());
-                            break;
-                        default:
-                            object = new Grass(i, j, Sprite.grass.getFxImage());
+        scene.setOnKeyPressed(
+                new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent event) {
+                        bomberman.keyPressed(event);
                     }
                 }
-                stillObjects.add(object);
+        );
+        scene.setOnKeyReleased(
+                new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(KeyEvent event) {
+                        bomberman.keyReleased(event);
+                    }
+                }
+        );
+
+        createMapGame(level, root);
+        update();
+
+        checkTouchWall.createCheckTouchWall(stillObjects);
+        bomberman.setCheckTouchWall(checkTouchWall);
+        for (Entity i: entities) {
+            if (i instanceof Oneal ) {
+                ((Oneal) i).setCheckTouchWall(checkTouchWall);
+            }
+            if (i instanceof Balloon) {
+                ((Balloon) i).setCheckTouchWall(checkTouchWall);
             }
         }
+
+        stage.show();
     }
 
     public void update() {
         entities.forEach(Entity::update);
     }
 
-    public void render() {
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        stillObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
+    public void createMapGame(int level, Group root) {
+        LoadLevel.createMap(level, root);
+        for (Entity i : stillObjects) {
+            root.getChildren().add(i.getImageView());
+            i.render();
+        }
+        for (Entity i : entities) {
+            root.getChildren().add(i.getImageView());
+            i.render();
+        }
+    }
+
+    public static void getImageOfBomb(Group root,Bomb bomb){
+        root.getChildren().remove(bomb.getImageView());
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public static void addEntity(Entity entity) {
+        entities.add(entity);
+    }
+
+    public static void addStillObject(Entity stillObj) {
+        stillObjects.add(stillObj);
+    }
+
+    public static Group getRoot() {
+        return root;
     }
 }
