@@ -3,6 +3,15 @@ package uet.oop.bomberman.LoadLevelGame;
 import javafx.scene.Group;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.*;
+import uet.oop.bomberman.entities.Character.Balloon;
+import uet.oop.bomberman.entities.Character.Oneal;
+import uet.oop.bomberman.entities.StillObject.Brick;
+import uet.oop.bomberman.entities.StillObject.Grass;
+import uet.oop.bomberman.entities.StillObject.Items.BombItem;
+import uet.oop.bomberman.entities.StillObject.Items.FlameItem;
+import uet.oop.bomberman.entities.StillObject.Items.SpeedItem;
+import uet.oop.bomberman.entities.StillObject.Portal;
+import uet.oop.bomberman.entities.StillObject.Wall;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.io.*;
@@ -13,6 +22,7 @@ public class LoadLevel {
     private static String fullMap = "";
 
     public static void createMap(int level, Group root) {
+        fullMap = "";
         final char wall = '#', brick = '*', portal = 'x', bomber = 'p', balloon = '1',
                 oneal = '2', bombItemp = 'b', flameItem = 'f', speedItem = 's';
 
@@ -41,7 +51,7 @@ public class LoadLevel {
                             object = new Portal(i, j, Sprite.portal.getFxImage());
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
-                            BombermanGame.addStillObject(object);
+                            //BombermanGame.addStillObject(object);
                             break;
                         case balloon:
                             object = new Balloon(i * Sprite.SCALED_SIZE, j * Sprite.SCALED_SIZE, Sprite.balloom_left1.getFxImage());
@@ -61,7 +71,7 @@ public class LoadLevel {
                             object = new BombItem(i, j, Sprite.powerup_bombs.getFxImage());
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
-                            BombermanGame.addStillObject(object);
+                            //BombermanGame.addStillObject(object);
                             break;
                         case flameItem:
                             object = new Grass(i, j, Sprite.grass.getFxImage());
@@ -88,14 +98,13 @@ public class LoadLevel {
                             BombermanGame.addStillObject(object);
                     }
                 }
-
             }
         }
     }
 
     private static void getFileMap(int level) throws IOException {
-        String path = "res/levels/Level" + (char)(level + '0') + ".txt";
-        File fileMap = new File(path);
+        String gameLevel = takeGameLevel(level);
+        File fileMap = new File(gameLevel);
         BufferedReader reader = new BufferedReader(new FileReader(fileMap));
         String line = reader.readLine();
         String parameter[] = line.split(" ");
@@ -105,5 +114,27 @@ public class LoadLevel {
             line = reader.readLine().trim() + "\n";
             fullMap += line;
         }
+    }
+
+    private static String takeGameLevel(int level) {
+        String gameLevel = "";
+        switch (level) {
+            case 1:
+                gameLevel = "GameInput/levels/Level1.txt";
+                break;
+            case 2:
+                gameLevel = "GameInput/levels/Level2.txt";
+                break;
+            case 3:
+                gameLevel = "GameInput/levels/Level3.txt";
+                break;
+            case 4:
+                gameLevel = "GameInput/levels/Level4.txt";
+                break;
+            default:
+                gameLevel = "GameInput/levels/Level5.txt";
+                break;
+        }
+        return gameLevel;
     }
 }

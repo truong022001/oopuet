@@ -6,19 +6,27 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import uet.oop.bomberman.Collision.CharacterTouch;
+import uet.oop.bomberman.Collision.CheckTouchWall;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.LoadLevelGame.LoadLevel;
+import uet.oop.bomberman.entities.Character.Bomber;
+import uet.oop.bomberman.entities.Character.Character;
+import uet.oop.bomberman.entities.Character.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
-    private static int level = 1;
+    public static int level = 1;
     private static List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
-    private CheckTouchWall checkTouchWall = new CheckTouchWall();
+    private static Bomber bomberman;
+    private static CheckTouchWall checkTouchWall = new CheckTouchWall();
+    private static CharacterTouch characterTouch = new CharacterTouch();
     private static Group root;
+    private static int numberOfEnemy = 0;
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -30,10 +38,8 @@ public class BombermanGame extends Application {
         root = new Group();
         Scene scene = new Scene(root);
         stage.setScene(scene);
-
-        Bomber bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
+        bomberman = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage());
         bomberman.setRoot(root);
-        entities.add(bomberman);
         scene.setOnKeyPressed(
                 new EventHandler<KeyEvent>() {
                     @Override
@@ -51,28 +57,20 @@ public class BombermanGame extends Application {
                 }
         );
 
-        createMapGame(level, root);
-        update();
-
-        checkTouchWall.createCheckTouchWall(stillObjects);
-        bomberman.setCheckTouchWall(checkTouchWall);
-        for (Entity i: entities) {
-            if (i instanceof Oneal ) {
-                ((Oneal) i).setCheckTouchWall(checkTouchWall);
-            }
-            if (i instanceof Balloon) {
-                ((Balloon) i).setCheckTouchWall(checkTouchWall);
-            }
-        }
-
+        loadLevel(level);
         stage.show();
     }
 
-    public void update() {
+    public static void update() {
         entities.forEach(Entity::update);
     }
 
-    public void createMapGame(int level, Group root) {
+    /**
+     * Hàm tạo map dựa trên thông số level.
+     * @param level Màn chơi cần tải map.
+     * @param root Group chứa hình ảnh của các enities.
+     */
+    public static void createMapGame(int level, Group root) {
         LoadLevel.createMap(level, root);
         for (Entity i : stillObjects) {
             root.getChildren().add(i.getImageView());
@@ -84,8 +82,50 @@ public class BombermanGame extends Application {
         }
     }
 
-    public static void getImageOfBomb(Group root,Bomb bomb){
-        root.getChildren().remove(bomb.getImageView());
+    /**
+     * Khi nhân vật bomber va chạm với Portal, hàm này sẽ được gọi.
+     * Nếu khi đó số lượng enemy bằng không, tải bản đồ của màn chơi kế tiếp.
+     * Ngược lại, sẽ chỉ coi đó như va chạm bình thường.
+     */
+    public static void checkNextLevel() {
+        if (numberOfEnemy == 0) {
+            bomberman.setAgain();
+            level = level + 1;
+            clear();
+            loadLevel(level);
+        }
+    }
+
+    public static void loadLevel(int level) {
+        bomberman.setX(32);
+        bomberman.setY(32);
+
+        entities.add(bomberman);
+        createMapGame(level, root);
+
+        checkTouchWall.createCheckTouchWall(stillObjects);
+        bomberman.setCheckItems(stillObjects);
+        characterTouch.createListEnemys(entities);
+        bomberman.setCharacterTouch(characterTouch);
+        for (Entity i: entities) {
+            if (i instanceof Character) {
+                ((Character) i).setCheckTouchWall(checkTouchWall);
+            }
+            if (i instanceof Enemy) {
+                numberOfEnemy++;
+            }
+        }
+        update();
+    }
+
+    public static void clear() {
+        numberOfEnemy = 0;
+        root.getChildren().clear();
+        stillObjects.clear();
+        entities.clear();
+        checkTouchWall.clear();
+        bomberman.getCheckItems().clear();
+        characterTouch.clear();
     }
 
     public void setLevel(int level) {
@@ -106,5 +146,13 @@ public class BombermanGame extends Application {
 
     public static Group getRoot() {
         return root;
+    }
+
+    public static int getNumberOfEnemy() {
+        return numberOfEnemy;
+    }
+
+    public static void setNumberOfEnemy(int num) {
+        numberOfEnemy = num;
     }
 }

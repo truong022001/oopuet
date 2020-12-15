@@ -11,15 +11,12 @@ public abstract class Entity {
     protected Image img;
     protected ImageView imageView;
     protected Group root;
+
     public Entity( int x, int y, Image img) {
         this.x = x;
         this.y = y;
         this.img = img;
         this.imageView = new ImageView(img);
-    }
-
-    public void setRoot(Group root) {
-        this.root = root;
     }
 
     public void render() {
@@ -30,6 +27,9 @@ public abstract class Entity {
 
     public abstract void update();
 
+    public void setRoot(Group root) {
+        this.root = root;
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -53,5 +53,9 @@ public abstract class Entity {
 
     public void setImageView(ImageView imageView) {
         this.imageView = imageView;
+    }
+
+    public void setImage(Image img) {
+        this.img = img;
     }
 }

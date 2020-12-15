@@ -1,6 +1,8 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Collision.CheckTouchWall;
+import uet.oop.bomberman.entities.StillObject.Obstacle;
 
 public class Brick extends Obstacle {
     private CheckTouchWall checkTouchWall;
