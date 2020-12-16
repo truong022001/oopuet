@@ -19,7 +19,6 @@ public abstract class Character extends Entity {
         super(x, y, img);
         checkTouchWall = new CheckTouchWall();
         characterTouch = new CharacterTouch();
-        velocity = 2;
         dead = false;
     }
 

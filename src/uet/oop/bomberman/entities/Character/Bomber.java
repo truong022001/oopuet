@@ -30,6 +30,7 @@ public class Bomber extends Character {
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
+        velocity = 2;
         isPowerUpBomb = false;
         isPowerUpSpeed = false;
         isPowerUpFlame = false;

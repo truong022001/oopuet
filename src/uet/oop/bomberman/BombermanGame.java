@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.Collision.CharacterTouch;
@@ -97,6 +99,7 @@ public class BombermanGame extends Application {
     }
 
     public static void loadLevel(int level) {
+        creatBoadStartGame();
         bomberman.setX(32);
         bomberman.setY(32);
 
@@ -116,6 +119,13 @@ public class BombermanGame extends Application {
             }
         }
         update();
+    }
+
+    public static void creatBoadStartGame() {
+        Canvas canvas = new Canvas(Sprite.SCALED_SIZE * LoadLevel.getWIDTH(), Sprite.SCALED_SIZE * LoadLevel.getHEIGHT());
+        root.getChildren().add(canvas);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
     }
 
     public static void clear() {

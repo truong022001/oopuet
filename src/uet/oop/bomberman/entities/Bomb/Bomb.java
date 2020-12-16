@@ -2,14 +2,19 @@ package uet.oop.bomberman.entities.Bomb;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Flame;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.List;
+
 public abstract class Bomb extends Entity {
     protected static AnimationTimer bombAnimation;
     protected Flame flame, flameUp, flameDown, flameLeft, flameRight;
+    protected Rectangle bombCollisionShape;
+    protected List<Entity> bricksInBomb;
 
     public Bomb(int x, int y, Image img) {
         super(x, y, img);

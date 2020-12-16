@@ -12,6 +12,7 @@ public abstract class Enemy extends Character {
     public Enemy(int x, int y, Image img) {
         super(x, y, img);
         collisionShape = new Rectangle(x, y,28,28);
+        velocity = 1;
     }
 
     @Override
@@ -55,6 +56,11 @@ public abstract class Enemy extends Character {
                         break;
                 }
                 if (checkTouchWall.Touch(getEnemy())) {
+                    velocityX = 0;
+                    velocityY = 0;
+                    direction = randomDirection();
+                }
+                if (characterTouch.touchEnemy(getEnemy())) {
                     velocityX = 0;
                     velocityY = 0;
                     direction = randomDirection();
