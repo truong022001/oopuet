@@ -30,6 +30,7 @@ public class Bomber extends Character {
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
+        velocity = 2;
         isPowerUpBomb = false;
         isPowerUpSpeed = false;
         isPowerUpFlame = false;
@@ -73,7 +74,7 @@ public class Bomber extends Character {
                             || (isPowerUpBomb && System.currentTimeMillis() - timePlaceBomb >= 500)) {
                         int xValue = (int) (Math.round(x * 1.0 / 32) * 32);
                         int yValue = (int) (Math.round(y * 1.0 / 32) * 32);
-                        if (!isPowerUpBomb) {
+                        if (!isPowerUpFlame) {
                             bomb = new NormalBomb(xValue, yValue, Sprite.bomb.getFxImage());
                         } else {
                             bomb = new PowerUpBomb(xValue, yValue, Sprite.bomb.getFxImage());
@@ -204,6 +205,7 @@ public class Bomber extends Character {
         }
     }
 
+    @Override
     public void die() {
         dead = true;
         setVelocity(0);

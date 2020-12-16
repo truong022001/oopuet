@@ -2,7 +2,10 @@ package uet.oop.bomberman.entities.Bomb;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Flame;
+import uet.oop.bomberman.entities.StillObject.Brick;
+import uet.oop.bomberman.entities.StillObject.Obstacle;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class PowerUpBomb extends Bomb {
@@ -67,26 +70,149 @@ public class PowerUpBomb extends Bomb {
     public void addFlameOnGroup() {
         BombermanGame.getRoot().getChildren().remove(getImageView());
         BombermanGame.getRoot().getChildren().add(flame.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameUp.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameDown.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameLeft.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameRight.getImageView());
-        BombermanGame.getRoot().getChildren().add(flamePowerUpUp.getImageView());
-        BombermanGame.getRoot().getChildren().add(flamePowerUpDown.getImageView());
-        BombermanGame.getRoot().getChildren().add(flamePowerUpLeft.getImageView());
-        BombermanGame.getRoot().getChildren().add(flamePowerUpRight.getImageView());
+        flameAddInGroup.add(flame);
+        boolean checkFlameUpBeTouch = false;
+        boolean checkFlameDownBeTouch = false;
+        boolean checkFlameRightBeTouch = false;
+        boolean checkFlameLeftBeTouch = false;
+        for (Obstacle i:canStopFlame) {
+            if (isTouched(flameUp.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameUpBeTouch = true;
+            }
+            if (isTouched(flameDown.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameDownBeTouch = true;
+            }
+            if (isTouched(flameLeft.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameLeftBeTouch = true;
+            }
+            if (isTouched(flameRight.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameRightBeTouch = true;
+            }
+        }
+
+        if (!checkFlameUpBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameUp.getImageView());
+            flameAddInGroup.add(flameUp);
+            boolean checkFlamePowerUpBeTouch = false;
+            for (Obstacle i:canStopFlame) {
+                if (isTouched(flamePowerUpUp.getCollishionShape(), i.getCollisonShape())) {
+                    checkFlamePowerUpBeTouch = true;
+                    break;
+                }
+            }
+            if (!checkFlamePowerUpBeTouch) {
+                BombermanGame.getRoot().getChildren().add(flamePowerUpUp.getImageView());
+                flameAddInGroup.add(flamePowerUpUp);
+            }
+        }
+        if (!checkFlameDownBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameDown.getImageView());
+            flameAddInGroup.add(flameDown);
+            boolean checkFlamePowerUpBeTouch = false;
+            for (Obstacle i:canStopFlame) {
+                if (isTouched(flamePowerUpDown.getCollishionShape(), i.getCollisonShape())) {
+                    checkFlamePowerUpBeTouch = true;
+                }
+            }
+            if (!checkFlamePowerUpBeTouch) {
+                BombermanGame.getRoot().getChildren().add(flamePowerUpDown.getImageView());
+                flameAddInGroup.add(flamePowerUpDown);
+            }
+        }
+        if (!checkFlameLeftBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameLeft.getImageView());
+            flameAddInGroup.add(flameLeft);
+            boolean checkFlamePowerUpBeTouch = false;
+            for (Obstacle i:canStopFlame) {
+                if (isTouched(flamePowerUpLeft.getCollishionShape(), i.getCollisonShape())) {
+                    checkFlamePowerUpBeTouch = true;
+                }
+            }
+            if (!checkFlamePowerUpBeTouch) {
+                BombermanGame.getRoot().getChildren().add(flamePowerUpLeft.getImageView());
+                flameAddInGroup.add(flamePowerUpLeft);
+            }
+        }
+        if (!checkFlameRightBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameRight.getImageView());
+            flameAddInGroup.add(flameRight);
+            boolean checkFlamePowerUpBeTouch = false;
+            for (Obstacle i:canStopFlame) {
+                if (isTouched(flamePowerUpRight.getCollishionShape(), i.getCollisonShape())) {
+                    checkFlamePowerUpBeTouch = true;
+                }
+            }
+            if (!checkFlamePowerUpBeTouch) {
+                BombermanGame.getRoot().getChildren().add(flamePowerUpRight.getImageView());
+                flameAddInGroup.add(flamePowerUpRight);
+            }
+        }
     }
 
     @Override
     public void removeFlameFromGroup() {
-        BombermanGame.getRoot().getChildren().remove(flame.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameUp.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameDown.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameLeft.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameRight.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flamePowerUpUp.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flamePowerUpDown.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flamePowerUpLeft.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flamePowerUpRight.getImageView());
+        for (Flame fl:flameAddInGroup) {
+            BombermanGame.getRoot().getChildren().remove(fl.getImageView());
+        }
+        flameAddInGroup.clear();
+    }
+
+    @Override
+    public void checkBrick() {
+        bricksInBomb = BombermanGame.getBricks();
+        boolean checkFlameUpBeTouch = false;
+        boolean checkFlameDownBeTouch = false;
+        boolean checkFlameRightBeTouch = false;
+        boolean checkFlameLeftBeTouch = false;
+        for (Entity i:bricksInBomb) {
+            if (isTouched(flameUp.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                brickExploded.add(i);
+                checkFlameUpBeTouch = true;
+            }
+            if (isTouched(flameDown.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                brickExploded.add(i);
+                checkFlameDownBeTouch = true;
+            }
+            if (isTouched(flameLeft.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                brickExploded.add(i);
+                checkFlameLeftBeTouch = true;
+            }
+            if (isTouched(flameRight.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                brickExploded.add(i);
+                checkFlameRightBeTouch = true;
+            }
+        }
+        if (!checkFlameUpBeTouch) {
+            for (Entity i:bricksInBomb) {
+                if (isTouched(flamePowerUpUp.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                    brickExploded.add(i);
+                    break;
+                }
+            }
+        }
+        if (!checkFlameDownBeTouch) {
+            for (Entity i:bricksInBomb) {
+                if (isTouched(flamePowerUpDown.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                    brickExploded.add(i);
+                    break;
+                }
+            }
+        }
+        if (!checkFlameLeftBeTouch) {
+            for (Entity i:bricksInBomb) {
+                if (isTouched(flamePowerUpLeft.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                    brickExploded.add(i);
+                    break;
+                }
+            }
+        }
+        if (!checkFlameRightBeTouch) {
+            for (Entity i:bricksInBomb) {
+                if (isTouched(flamePowerUpRight.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                    brickExploded.add(i);
+                    break;
+                }
+            }
+        }
     }
 }

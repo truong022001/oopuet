@@ -46,12 +46,14 @@ public class LoadLevel {
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
                             BombermanGame.addStillObject(object);
+                            BombermanGame.addBricks(object);
                             break;
                         case portal:
                             object = new Portal(i, j, Sprite.portal.getFxImage());
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
-                            //BombermanGame.addStillObject(object);
+                            BombermanGame.addStillObject(object);
+                            BombermanGame.addBricks(object);
                             break;
                         case balloon:
                             object = new Balloon(i * Sprite.SCALED_SIZE, j * Sprite.SCALED_SIZE, Sprite.balloom_left1.getFxImage());
@@ -71,7 +73,8 @@ public class LoadLevel {
                             object = new BombItem(i, j, Sprite.powerup_bombs.getFxImage());
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
-                            //BombermanGame.addStillObject(object);
+                            BombermanGame.addStillObject(object);
+                            BombermanGame.addBricks(object);
                             break;
                         case flameItem:
                             object = new Grass(i, j, Sprite.grass.getFxImage());
@@ -80,6 +83,7 @@ public class LoadLevel {
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
                             BombermanGame.addStillObject(object);
+                            BombermanGame.addBricks(object);
                             break;
                         case speedItem:
                             object = new Grass(i, j, Sprite.grass.getFxImage());
@@ -88,6 +92,7 @@ public class LoadLevel {
                             BombermanGame.addStillObject(object);
                             object = new Brick(i, j, Sprite.brick.getFxImage());
                             BombermanGame.addStillObject(object);
+                            BombermanGame.addBricks(object);
                             break;
                         case wall:
                             object = new Wall(i, j, Sprite.wall.getFxImage());
@@ -120,21 +125,29 @@ public class LoadLevel {
         String gameLevel = "";
         switch (level) {
             case 1:
-                gameLevel = "GameInput/levels/Level1.txt";
+                gameLevel = "res/levels/Level1.txt";
                 break;
             case 2:
-                gameLevel = "GameInput/levels/Level2.txt";
+                gameLevel = "res/levels/Level2.txt";
                 break;
             case 3:
-                gameLevel = "GameInput/levels/Level3.txt";
+                gameLevel = "res/levels/Level3.txt";
                 break;
             case 4:
-                gameLevel = "GameInput/levels/Level4.txt";
+                gameLevel = "res/levels/Level4.txt";
                 break;
             default:
-                gameLevel = "GameInput/levels/Level5.txt";
+                gameLevel = "res/levels/Level5.txt";
                 break;
         }
         return gameLevel;
+    }
+
+    public static int getWIDTH() {
+        return WIDTH;
+    }
+
+    public static int getHEIGHT() {
+        return HEIGHT;
     }
 }

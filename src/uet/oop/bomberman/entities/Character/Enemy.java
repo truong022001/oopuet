@@ -3,6 +3,8 @@ package uet.oop.bomberman.entities.Character;
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Enemy extends Character {
     protected String direction;
@@ -12,12 +14,33 @@ public abstract class Enemy extends Character {
     public Enemy(int x, int y, Image img) {
         super(x, y, img);
         collisionShape = new Rectangle(x, y,28,28);
+        velocity = 1;
     }
 
     @Override
     public void update() {
         realEnemy = createEnemyAnimationTimer();
         moveStart();
+    }
+
+    @Override
+    public void die() {
+        BombermanGame.getEntities().remove(getEnemy());
+        BombermanGame.getCharacterTouch().getEnemys().remove(getEnemy());
+        realEnemy.stop();
+        velocity = 0;
+        BombermanGame.setNumberOfEnemy(BombermanGame.getNumberOfEnemy() - 1);
+        setDieAnimation();
+        new AnimationTimer() {
+            long beginTime = System.currentTimeMillis();
+            @Override
+            public void handle(long now) {
+                if (System.currentTimeMillis() - beginTime >= 500) {
+                    BombermanGame.getRoot().getChildren().remove(getImageView());
+                    stop();
+                }
+            }
+        }.start();
     }
 
     public void moveStart() {
@@ -59,6 +82,11 @@ public abstract class Enemy extends Character {
                     velocityY = 0;
                     direction = randomDirection();
                 }
+                if (characterTouch.touchEnemy(getEnemy())) {
+                    velocityX = 0;
+                    velocityY = 0;
+                    direction = randomDirection();
+                }
                 if (now - lastTime > 200000000) {
                     setImageFrame(isFrame1, direction);
                     isFrame1 = !isFrame1;
@@ -68,8 +96,6 @@ public abstract class Enemy extends Character {
             }
         };
     }
-
-    public abstract void setImageFrame(boolean isFrame1, String direction);
 
     private String randomDirection() {
         int r = 0 + (int) (Math.random() * ((3 - 0) + 1));
@@ -94,4 +120,8 @@ public abstract class Enemy extends Character {
     public Enemy getEnemy() {
         return this;
     }
+
+    public abstract void setImageFrame(boolean isFrame1, String direction);
+
+    public abstract void setDieAnimation();
 }

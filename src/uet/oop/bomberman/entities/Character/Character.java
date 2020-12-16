@@ -19,7 +19,6 @@ public abstract class Character extends Entity {
         super(x, y, img);
         checkTouchWall = new CheckTouchWall();
         characterTouch = new CharacterTouch();
-        velocity = 2;
         dead = false;
     }
 
@@ -29,6 +28,8 @@ public abstract class Character extends Entity {
         imageView.setX(getX());
         imageView.setY(getY());
     }
+
+    public abstract void die();
 
     public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
         this.checkTouchWall = checkTouchWall;

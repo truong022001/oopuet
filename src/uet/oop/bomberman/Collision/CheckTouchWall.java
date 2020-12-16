@@ -45,4 +45,15 @@ public class CheckTouchWall extends Collision {
         }
         return false;
     }
+
+    public boolean TouchBrick(Rectangle collishionShape) {
+        for (int i = 0; i < obstacles.size(); i++) {
+            Obstacle obstacle = obstacles.get(i);
+            Rectangle obstacleShape = obstacle.getCollisonShape();
+            if ((obstacle instanceof Brick) && (obstacleShape.getBoundsInParent().intersects(collishionShape.getBoundsInParent()))) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

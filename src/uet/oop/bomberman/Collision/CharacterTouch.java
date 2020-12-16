@@ -28,7 +28,7 @@ public class CharacterTouch {
             Enemy enemy = enemys.get(i);
             Rectangle enemyShape = enemy.getCollishionShape();
             if (enemyShape.getBoundsInParent().intersects(characterShape.getBoundsInParent())
-                && enemy != character) {
+                    && enemy != character) {
                 if (character instanceof Bomber) {
                     ((Bomber) character).die();
                 }
@@ -40,6 +40,10 @@ public class CharacterTouch {
 
     public void addEnemy(Enemy object) {
         enemys.add(object);
+    }
+
+    public List<Enemy> getEnemys() {
+        return enemys;
     }
 
     public void clear() {

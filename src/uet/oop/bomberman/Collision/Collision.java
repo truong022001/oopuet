@@ -14,4 +14,8 @@ public abstract class Collision {
     public void clear() {
         obstacles.clear();
     }
+
+    public List<Obstacle> getObstacles() {
+        return obstacles;
+    }
 }

@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.Collision.CharacterTouch;
@@ -22,6 +24,7 @@ public class BombermanGame extends Application {
     public static int level = 1;
     private static List<Entity> entities = new ArrayList<>();
     private static List<Entity> stillObjects = new ArrayList<>();
+    private static List<Entity> bricks = new ArrayList<>();
     private static Bomber bomberman;
     private static CheckTouchWall checkTouchWall = new CheckTouchWall();
     private static CharacterTouch characterTouch = new CharacterTouch();
@@ -97,6 +100,7 @@ public class BombermanGame extends Application {
     }
 
     public static void loadLevel(int level) {
+        //creatBoadStartGame();
         bomberman.setX(32);
         bomberman.setY(32);
 
@@ -117,6 +121,14 @@ public class BombermanGame extends Application {
         }
         update();
     }
+
+    /*
+    public static void creatBoadStartGame() {
+        Canvas canvas = new Canvas(Sprite.SCALED_SIZE * LoadLevel.getWIDTH(), Sprite.SCALED_SIZE * LoadLevel.getHEIGHT());
+        root.getChildren().add(canvas);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+    }*/
 
     public static void clear() {
         numberOfEnemy = 0;
@@ -140,6 +152,10 @@ public class BombermanGame extends Application {
         entities.add(entity);
     }
 
+    public static void addBricks(Entity brick) {
+        bricks.add(brick);
+    }
+
     public static void addStillObject(Entity stillObj) {
         stillObjects.add(stillObj);
     }
@@ -154,5 +170,29 @@ public class BombermanGame extends Application {
 
     public static void setNumberOfEnemy(int num) {
         numberOfEnemy = num;
+    }
+
+    public static List<Entity> getBricks() {
+        return bricks;
+    }
+
+    public static void setEntities(List<Entity> entities) {
+        BombermanGame.entities = entities;
+    }
+
+    public static List<Entity> getStillObjects() {
+        return stillObjects;
+    }
+
+    public static CheckTouchWall getCheckTouchWall() {
+        return checkTouchWall;
+    }
+
+    public static List<Entity> getEntities() {
+        return entities;
+    }
+
+    public static CharacterTouch getCharacterTouch() {
+        return characterTouch;
     }
 }

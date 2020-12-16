@@ -30,4 +30,10 @@ public class Balloon extends Enemy {
                 break;
         }
     }
+
+    @Override
+    public void setDieAnimation() {
+        setImage(Sprite.balloom_dead.getFxImage());
+        render();
+    }
 }

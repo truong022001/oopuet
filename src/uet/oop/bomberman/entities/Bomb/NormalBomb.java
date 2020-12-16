@@ -2,7 +2,10 @@ package uet.oop.bomberman.entities.Bomb;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Flame;
+import uet.oop.bomberman.entities.StillObject.Brick;
+import uet.oop.bomberman.entities.StillObject.Obstacle;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class NormalBomb extends Bomb {
@@ -49,18 +52,60 @@ public class NormalBomb extends Bomb {
     public void addFlameOnGroup() {
         BombermanGame.getRoot().getChildren().remove(getImageView());
         BombermanGame.getRoot().getChildren().add(flame.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameUp.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameDown.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameLeft.getImageView());
-        BombermanGame.getRoot().getChildren().add(flameRight.getImageView());
+        flameAddInGroup.add(flame);
+        boolean checkFlameUpBeTouch = false;
+        boolean checkFlameDownBeTouch = false;
+        boolean checkFlameRightBeTouch = false;
+        boolean checkFlameLeftBeTouch = false;
+        for (Obstacle i:canStopFlame) {
+            if (isTouched(flameUp.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameUpBeTouch = true;
+            }
+            if (isTouched(flameDown.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameDownBeTouch = true;
+            }
+            if (isTouched(flameLeft.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameLeftBeTouch = true;
+            }
+            if (isTouched(flameRight.getCollishionShape(), i.getCollisonShape())) {
+                checkFlameRightBeTouch = true;
+            }
+        }
+        if (!checkFlameUpBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameUp.getImageView());
+            flameAddInGroup.add(flameUp);
+        }
+        if (!checkFlameDownBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameDown.getImageView());
+            flameAddInGroup.add(flameDown);
+        }
+        if (!checkFlameLeftBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameLeft.getImageView());
+            flameAddInGroup.add(flameLeft);
+        }
+        if (!checkFlameRightBeTouch) {
+            BombermanGame.getRoot().getChildren().add(flameRight.getImageView());
+            flameAddInGroup.add(flameRight);
+        }
     }
 
     @Override
     public void removeFlameFromGroup() {
-        BombermanGame.getRoot().getChildren().remove(flame.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameUp.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameDown.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameLeft.getImageView());
-        BombermanGame.getRoot().getChildren().remove(flameRight.getImageView());
+        for (Flame fl:flameAddInGroup) {
+            BombermanGame.getRoot().getChildren().remove(fl.getImageView());
+        }
+        flameAddInGroup.clear();
+    }
+
+    @Override
+    public void checkBrick() {
+        for (Entity i:bricksInBomb) {
+            if (isTouched(flameUp.getCollishionShape(), ((Brick) i).getCollisonShape())
+                    || isTouched(flameDown.getCollishionShape(), ((Brick) i).getCollisonShape())
+                    || isTouched(flameLeft.getCollishionShape(), ((Brick) i).getCollisonShape())
+                    || isTouched(flameRight.getCollishionShape(), ((Brick) i).getCollisonShape())) {
+                brickExploded.add(i);
+            }
+        }
     }
 }
