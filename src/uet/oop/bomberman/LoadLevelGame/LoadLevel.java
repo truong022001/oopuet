@@ -120,7 +120,7 @@ public class LoadLevel {
         String gameLevel = "";
         switch (level) {
             case 1:
-                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman2\\BombermanGame\\res\\levels\\Level1.txt";
+                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman\\res\\levels\\Level1.txt";
                 break;
             case 2:
                 gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman2\\BombermanGame\\res\\levels\\Level2.txt";
