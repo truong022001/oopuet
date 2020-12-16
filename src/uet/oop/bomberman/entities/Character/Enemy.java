@@ -1,45 +1,28 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.Character;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.graphics.Sprite;
 
-public class Balloon extends Entity {
-    private int velocity = 2;
-    private String direction;
-    private AnimationTimer realBalloon;
-    private int velocityX;
-    private int velocityY;
-    private CheckTouchWall checkTouchWall=new CheckTouchWall();
-    private boolean alive = true;
-    private Rectangle balloonCollisionShape;
+public abstract class Enemy extends Character {
+    protected String direction;
+    protected AnimationTimer realEnemy;
+    protected boolean alive = true;
 
-    public Balloon(int x, int y, Image img) {
+    public Enemy(int x, int y, Image img) {
         super(x, y, img);
-        balloonCollisionShape = new Rectangle(x, y,28,28);
-    }
-
-    public void setCheckTouchWall(CheckTouchWall checkTouchWall) {
-        this.checkTouchWall = checkTouchWall;
+        collisionShape = new Rectangle(x, y,28,28);
     }
 
     @Override
     public void update() {
-        realBalloon=createBalloonAnimationTimer();
+        realEnemy = createEnemyAnimationTimer();
         moveStart();
-    }
-
-    @Override
-    public void render() {
-        imageView.setImage(img);
-        imageView.setX(getX());
-        imageView.setY(getY());
     }
 
     public void moveStart() {
         direction = randomDirection();
-        realBalloon.start();
+        realEnemy.start();
     }
 
     public void move(){
@@ -48,7 +31,7 @@ public class Balloon extends Entity {
         render();
     }
 
-    public AnimationTimer createBalloonAnimationTimer() {
+    public AnimationTimer createEnemyAnimationTimer() {
         return new AnimationTimer() {
             boolean isFrame1 = true;
             long lastTime = 0;
@@ -71,13 +54,13 @@ public class Balloon extends Entity {
                         velocityY = velocity;
                         break;
                 }
-                if (checkTouchWall.Touch(getCollishionShape())) {
+                if (checkTouchWall.Touch(getEnemy())) {
                     velocityX = 0;
                     velocityY = 0;
                     direction = randomDirection();
                 }
                 if (now - lastTime > 200000000) {
-                    setImageFrame(isFrame1);
+                    setImageFrame(isFrame1, direction);
                     isFrame1 = !isFrame1;
                     lastTime = now;
                 }
@@ -86,26 +69,7 @@ public class Balloon extends Entity {
         };
     }
 
-    private void setImageFrame(boolean isFrame1) {
-        switch (direction) {
-            case "left":
-            case "up":
-                if (isFrame1) {
-                    img = Sprite.balloom_left2.getFxImage();
-                } else {
-                    this.img = Sprite.balloom_left3.getFxImage();
-                }
-                break;
-            case "right":
-            case "down":
-                if (isFrame1) {
-                    img = Sprite.balloom_right2.getFxImage();
-                } else {
-                    this.img = Sprite.balloom_right3.getFxImage();
-                }
-                break;
-        }
-    }
+    public abstract void setImageFrame(boolean isFrame1, String direction);
 
     private String randomDirection() {
         int r = 0 + (int) (Math.random() * ((3 - 0) + 1));
@@ -120,9 +84,14 @@ public class Balloon extends Entity {
         }
     }
 
+    @Override
     public Rectangle getCollishionShape() {
-        balloonCollisionShape.setX(x + 2 + velocityX);
-        balloonCollisionShape.setY(y + 2 + velocityY);
-        return balloonCollisionShape;
+        collisionShape.setX(x + 2 + velocityX);
+        collisionShape.setY(y + 2 + velocityY);
+        return collisionShape;
+    }
+
+    public Enemy getEnemy() {
+        return this;
     }
 }
