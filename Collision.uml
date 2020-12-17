@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>uet.oop.bomberman.Collision.Collision</OriginalElement>
+  <nodes>
+    <node x="432.0" y="180.0">uet.oop.bomberman.Collision.CheckItems</node>
+    <node x="312.0" y="260.0">uet.oop.bomberman.entities.StillObject.Items.BombItem</node>
+    <node x="10.5" y="98.5">uet.oop.bomberman.LoadLevelGame.LoadLevel</node>
+    <node x="524.2083333333333" y="100.0">uet.oop.bomberman.Collision.Collision</node>
+    <node x="1225.75" y="100.0">uet.oop.bomberman.BombermanGame</node>
+    <node x="0.0" y="180.0">uet.oop.bomberman.entities.StillObject.Portal</node>
+    <node x="172.0" y="260.0">uet.oop.bomberman.entities.StillObject.Items.FlameItem</node>
+    <node x="1172.0" y="180.0">uet.oop.bomberman.entities.Bomb.NormalBomb</node>
+    <node x="216.0" y="180.0">uet.oop.bomberman.entities.StillObject.Brick</node>
+    <node x="1016.0" y="180.0">uet.oop.bomberman.entities.Bomb.PowerUpBomb</node>
+    <node x="485.0" y="260.0">uet.oop.bomberman.entities.StillObject.Items.SpeedItem</node>
+    <node x="805.75" y="100.0">uet.oop.bomberman.entities.Character.Character</node>
+    <node x="702.0" y="260.0">uet.oop.bomberman.entities.Character.Oneal</node>
+    <node x="580.0" y="180.0">uet.oop.bomberman.Collision.CheckTouchWall</node>
+    <node x="1125.75" y="100.0">uet.oop.bomberman.entities.Bomb.Bomb</node>
+    <node x="945.75" y="100.0">uet.oop.bomberman.Collision.CharacterTouch</node>
+    <node x="152.0" y="100.0">uet.oop.bomberman.entities.StillObject.Obstacle</node>
+    <node x="810.0" y="260.0">uet.oop.bomberman.entities.Character.Balloon</node>
+    <node x="760.0" y="180.0">uet.oop.bomberman.entities.Character.Enemy</node>
+    <node x="324.0" y="180.0">uet.oop.bomberman.entities.StillObject.Items.Items</node>
+    <node x="658.0" y="0.0">java.lang.Object</node>
+    <node x="868.0" y="180.0">uet.oop.bomberman.entities.Character.Bomber</node>
+    <node x="334.70833333333326" y="100.0">uet.oop.bomberman.Collision.CheckBomb</node>
+    <node x="116.0" y="180.0">uet.oop.bomberman.entities.StillObject.Wall</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="uet.oop.bomberman.BombermanGame" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="1301.75" y="50.0" />
+      <point x="748.0" y="50.0" />
+      <point x="42.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Items.BombItem" target="uet.oop.bomberman.entities.StillObject.Items.Items">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.Collision.Collision" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="584.2083333333333" y="80.0" />
+      <point x="700.0" y="80.0" />
+      <point x="-6.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Items.FlameItem" target="uet.oop.bomberman.entities.StillObject.Items.Items">
+      <point x="0.0" y="-15.0" />
+      <point x="232.0" y="235.0" />
+      <point x="338.66666666666663" y="235.0" />
+      <point x="-29.33333333333337" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Items.SpeedItem" target="uet.oop.bomberman.entities.StillObject.Items.Items">
+      <point x="0.0" y="-15.0" />
+      <point x="545.0" y="235.0" />
+      <point x="397.33333333333337" y="235.0" />
+      <point x="29.33333333333337" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Brick" target="uet.oop.bomberman.entities.StillObject.Obstacle">
+      <point x="0.0" y="-15.0" />
+      <point x="260.0" y="160.0" />
+      <point x="222.0" y="160.0" />
+      <point x="14.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.Collision.CharacterTouch" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="1025.75" y="70.0" />
+      <point x="724.0" y="70.0" />
+      <point x="18.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Character.Enemy" target="uet.oop.bomberman.entities.Character.Character">
+      <point x="0.0" y="-15.0" />
+      <point x="804.0" y="160.0" />
+      <point x="835.75" y="160.0" />
+      <point x="-30.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Wall" target="uet.oop.bomberman.entities.StillObject.Obstacle">
+      <point x="0.0" y="-15.0" />
+      <point x="156.0" y="160.0" />
+      <point x="194.0" y="160.0" />
+      <point x="-14.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.Collision.CheckItems" target="uet.oop.bomberman.Collision.Collision">
+      <point x="0.0" y="-15.0" />
+      <point x="496.0" y="160.0" />
+      <point x="554.2083333333333" y="160.0" />
+      <point x="-30.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Bomb.NormalBomb" target="uet.oop.bomberman.entities.Bomb.Bomb">
+      <point x="0.0" y="-15.0" />
+      <point x="1236.0" y="160.0" />
+      <point x="1185.75" y="160.0" />
+      <point x="20.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Bomb.PowerUpBomb" target="uet.oop.bomberman.entities.Bomb.Bomb">
+      <point x="0.0" y="-15.0" />
+      <point x="1084.0" y="160.0" />
+      <point x="1145.75" y="160.0" />
+      <point x="-20.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Obstacle" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="208.0" y="60.0" />
+      <point x="676.0" y="60.0" />
+      <point x="-30.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Character.Balloon" target="uet.oop.bomberman.entities.Character.Enemy">
+      <point x="0.0" y="-15.0" />
+      <point x="862.0" y="235.0" />
+      <point x="826.0" y="235.0" />
+      <point x="22.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Bomb.Bomb" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="1165.75" y="60.0" />
+      <point x="736.0" y="60.0" />
+      <point x="30.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.Collision.CheckBomb" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="394.70833333333326" y="70.0" />
+      <point x="688.0" y="70.0" />
+      <point x="-18.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Items.Items" target="uet.oop.bomberman.entities.StillObject.Obstacle">
+      <point x="0.0" y="-15.0" />
+      <point x="368.0" y="150.0" />
+      <point x="250.0" y="150.0" />
+      <point x="42.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.StillObject.Portal" target="uet.oop.bomberman.entities.StillObject.Obstacle">
+      <point x="0.0" y="-15.0" />
+      <point x="48.0" y="150.0" />
+      <point x="166.0" y="150.0" />
+      <point x="-42.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Character.Oneal" target="uet.oop.bomberman.entities.Character.Enemy">
+      <point x="0.0" y="-15.0" />
+      <point x="746.0" y="235.0" />
+      <point x="782.0" y="235.0" />
+      <point x="-22.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Character.Bomber" target="uet.oop.bomberman.entities.Character.Character">
+      <point x="0.0" y="-15.0" />
+      <point x="916.0" y="160.0" />
+      <point x="895.75" y="160.0" />
+      <point x="30.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.Collision.CheckTouchWall" target="uet.oop.bomberman.Collision.Collision">
+      <point x="0.0" y="-15.0" />
+      <point x="660.0" y="160.0" />
+      <point x="614.2083333333333" y="160.0" />
+      <point x="30.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.LoadLevelGame.LoadLevel" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="72.0" y="50.0" />
+      <point x="664.0" y="50.0" />
+      <point x="-42.0" y="15.0" />
+    </edge>
+    <edge source="uet.oop.bomberman.entities.Character.Character" target="java.lang.Object">
+      <point x="0.0" y="-15.0" />
+      <point x="865.75" y="80.0" />
+      <point x="712.0" y="80.0" />
+      <point x="6.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.6666666666666666" x="715.0" y="140.0" />
+  <SelectedNodes>
+    <node>uet.oop.bomberman.LoadLevelGame.LoadLevel</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
