@@ -65,6 +65,7 @@ public class BombermanGame extends Application {
 
     public static void update() {
         entities.forEach(Entity::update);
+        
     }
 
     /**
@@ -85,9 +86,9 @@ public class BombermanGame extends Application {
     }
 
     /**
-     * Khi nhân vật bomber va chạm với Portal, hàm này sẽ được gọi.
+     * Khi nhân vật bomber va chạm với Portal, hàm này sẽ được call.
      * Nếu khi đó số lượng enemy bằng không, tải bản đồ của màn chơi kế tiếp.
-     * Ngược lại, sẽ chỉ coi đó như va chạm bình thường.
+     * Ngược lại, sẽ chỉ coi đó như va chạm bình thg.
      */
     public static void checkNextLevel() {
         if (numberOfEnemy == 0) {
