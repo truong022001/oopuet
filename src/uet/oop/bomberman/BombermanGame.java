@@ -1,5 +1,8 @@
 package uet.oop.bomberman;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -10,15 +13,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import uet.oop.bomberman.Collision.CharacterTouch;
 import uet.oop.bomberman.Collision.CheckTouchWall;
-import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.LoadLevelGame.LoadLevel;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Character.Bomber;
 import uet.oop.bomberman.entities.Character.Character;
 import uet.oop.bomberman.entities.Character.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BombermanGame extends Application {
     public static int level = 1;
@@ -65,7 +65,6 @@ public class BombermanGame extends Application {
 
     public static void update() {
         entities.forEach(Entity::update);
-        
     }
 
     /**
@@ -86,9 +85,9 @@ public class BombermanGame extends Application {
     }
 
     /**
-     * Khi nhân vật bomber va chạm với Portal, hàm này sẽ được call.
+     * Khi nhân vật bomber va chạm với Portal, hàm này sẽ được gọi.
      * Nếu khi đó số lượng enemy bằng không, tải bản đồ của màn chơi kế tiếp.
-     * Ngược lại, sẽ chỉ coi đó như va chạm bình thg.
+     * Ngược lại, sẽ chỉ coi đó như va chạm bình thường.
      */
     public static void checkNextLevel() {
         if (numberOfEnemy == 0) {

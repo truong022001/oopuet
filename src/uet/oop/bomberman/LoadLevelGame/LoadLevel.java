@@ -120,19 +120,20 @@ public class LoadLevel {
         String gameLevel = "";
         switch (level) {
             case 1:
-                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman\\res\\levels\\Level1.txt";
+                // gameLevel = "C:\\Users\\Truong Nguyen\\Downloads\\bomberman\\BombermanGame-master\\res\\levels\\Level1.txt";
+                gameLevel = "res/levels/Level1.txt";
                 break;
             case 2:
-                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman2\\BombermanGame\\res\\levels\\Level2.txt";
+                gameLevel = "res/levels/Level2.txt";
                 break;
             case 3:
-                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman2\\BombermanGame\\res\\levels\\Level3.txt";
+                gameLevel = "res/levels/Level3.txt";
                 break;
             case 4:
-                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman2\\BombermanGame\\res\\levels\\Level4.txt";
+                gameLevel = "res/levels/Level4.txt";
                 break;
             default:
-                gameLevel = "C:\\Users\\Windows 10 TIMT\\IdeaProjects\\Bomberman2\\BombermanGame\\res\\levels\\Level5.txt";
+                gameLevel = "res/levels/Level5.txt";
                 break;
         }
         return gameLevel;
